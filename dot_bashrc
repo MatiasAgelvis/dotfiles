@@ -1,0 +1,42 @@
+# If you come from bash you might have to change your $PATH.
+PATH="${HOME}/bin:/usr/local/bin:/usr/local/sbin:${PATH}"
+# Setting PATH for Python
+PATH="${HOME}/.pyenv/bin:${PATH}"
+# PATH="/usr/local/opt/python@3.8/bin:${PATH}"
+# Setting PATH for Ruby
+PATH="${HOME}/.rbenv/bin:${PATH}"
+# Setting PATH for LaTeX
+PATH="/Library/TeX/texbin:${PATH}"
+# Setting PATH for SML/NJ
+PATH="/usr/local/smlnj/bin:${PATH}"
+# Add yarn global bin
+PATH="$(yarn global bin):${PATH}"
+
+SDKROOT="/Library/Developer/CommandLineTools/SDKs/MacOSX10.15.sdk"
+
+
+eval "$(rbenv init -)"
+eval "$(pyenv init --path)"
+eval "$(pyenv init -)"
+eval "$(pyenv virtualenv-init -)"
+
+export PATH
+
+# Setup the default editor for Homebrew
+HOMEBREW_EDITOR=subl
+
+# Add color to the terminal
+export PS1="\[\033[01;32m\]\u@\h\[\033[01;34m\] \w \$\[\033[00m\] "
+export CLICOLOR=1
+export LSCOLORS=ExFxBxDxCxegedabagacad
+
+export PATH
+export BASH_SILENCE_DEPRECATION_WARNING=1
+
+
+alias git='/usr/local/bin/git'
+alias jula="jupyter-lab"
+alias bashconfig="subl ~/.bashrc"
+
+# adds the .gitignore generator api to bash, arguments must be passed separated by a comma (c,c++,...)
+function gi() {curl -sLw n https://www.toptal.com/developers/gitignore/api/$@ ;}
