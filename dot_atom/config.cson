@@ -1,0 +1,47 @@
+"*":
+  Hydrogen:
+    gateways: '''
+      [{
+        "name": "C1 Ubuntu",
+        "options": {
+          "baseUrl": "http://localhost:8080",
+          "token": ""
+        }
+      }]
+    '''
+  core:
+    telemetryConsent: "limited"
+    themes: [
+      "one-light-ui"
+      "one-light-syntax"
+    ]
+  editor:
+    scrollPastEnd: true
+    softWrap: true
+  "exception-reporting":
+    userId: "8ee937f3-9d2f-4c75-bc77-f31ad9ccc375"
+  "ide-python":
+    pylsPlugins:
+      flake8:
+        enabled: true
+      jedi_completion: {}
+      jedi_definition:
+        follow_builtin_imports: true
+        follow_imports: true
+      jedi_hover: {}
+      jedi_signature_help: {}
+      pycodestyle:
+        enabled: false
+      pydocstyle:
+        enabled: true
+      pyflakes:
+        enabled: false
+  "linter-ui-default":
+    panelHeight: 167
+  "sync-settings":
+    gistId: "61852d231ab2875f7d8cc7daa02d00f3"
+    hiddenSettings:
+      _lastBackupTime: "2022-02-01T14:37:57Z"
+    personalAccessToken: "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"
+  welcome:
+    showOnStartup: false

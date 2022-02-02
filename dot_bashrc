@@ -40,3 +40,4 @@ alias bashconfig="subl ~/.bashrc"
 
 # adds the .gitignore generator api to bash, arguments must be passed separated by a comma (c,c++,...)
 function gi() {curl -sLw n https://www.toptal.com/developers/gitignore/api/$@ ;}
+

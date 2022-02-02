@@ -1,0 +1,103 @@
+# zmodload -a zsh/zprof zprof
+
+# If you come from bash you might have to change your $PATH.
+PATH="/usr/local/bin:/usr/local/sbin:${PATH}"
+# Setting PATH for Python
+# PATH="${HOME}/.pyenv/bin:${PATH}"
+# PATH="/usr/local/opt/python@3.8/bin:${PATH}"
+# Setting PATH for Ruby
+# PATH="${HOME}/.rbenv/bin:${PATH}"
+# Setting PATH for LaTeX
+PATH="/Library/TeX/texbin:${PATH}"
+# Setting PATH for SML/NJ
+PATH="/usr/local/smlnj/bin:${PATH}"
+# Add yarn global bin
+PATH="/usr/local/bin:${PATH}"
+
+SDKROOT="/Library/Developer/CommandLineTools/SDKs/MacOSX10.15.sdk"
+
+# activate Antigen
+source /usr/local/share/antigen/antigen.zsh
+antigen init ~/.antigenrc
+
+# activate ENVs
+
+# eval "$(jenv init - --no-rehash)"
+lazyload 'eval "$(jenv init - --no-rehash)"' jenv
+# eval "$(rbenv init - --no-rehash)"
+lazyload 'eval "$(rbenv init - --no-rehash)"' rbenv
+
+eval "$(pyenv init --path)"
+eval "$(pyenv init - --no-rehash)"
+eval "$(pyenv virtualenv-init -)"
+
+export PATH
+
+# Setup the default editor for Homebrew
+HOMEBREW_EDITOR=subl
+
+# Path to your oh-my-zsh installation.
+export ZSH="/Users/matiasagelvis/.oh-my-zsh"
+
+ZSH_THEME="robbyrussell"
+
+# Uncomment the following line to enable command auto-correction.
+ENABLE_CORRECTION="true"
+
+# Uncomment the following line if you want to disable marking untracked files
+# under VCS as dirty. This makes repository status check for large repositories
+# much, much faster.
+# DISABLE_UNTRACKED_FILES_DIRTY="true"
+
+source $ZSH/oh-my-zsh.sh
+source /usr/local/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+
+# User configuration
+
+export MANPATH="/usr/local/man:$MANPATH"
+# add the TeX MAN
+export MANPATH=/Library/TeX/Distributions/.DefaultTeX/Contents/Man:$MANPATH
+
+# You may need to manually set your language environment
+export LANG=en_US.UTF-8
+
+# Preferred editor for local and remote sessions
+# if [[ -n $SSH_CONNECTION ]]; then
+#   export EDITOR='vim'
+# else
+#   export EDITOR='mvim'
+# fi
+
+# Example aliases
+alias zshconfig="subl ~/.zshrc"
+alias zshreload="exec zsh"
+alias ohmyzsh="subl ~/.oh-my-zsh"
+alias git='/usr/local/bin/git'
+alias jula="jupyter-lab"
+alias nubrew="HOMEBREW_NO_AUTO_UPDATE=1; brew"
+alias gpin="ping 8.8.8.8"
+alias brewpython="/usr/local/bin/python3"
+
+# bind 0x15 to backward-kill-line like in the rest of the OS 
+bindkey "^U" backward-kill-line
+
+# add bash completions
+autoload bashcompinit
+bashcompinit
+if type brew &>/dev/null; then
+    FPATH=$(brew --prefix)/share/zsh-completions:$FPATH
+
+    autoload -Uz compinit
+
+	for dump in ~/.zcompdump(N.mh+24); do
+	  compinit
+	done
+	compinit -C
+fi
+
+# adds the .gitignore generator api to zsh, arguments must be passed separated by a comma (c,c++,...)
+function gi() {curl -sLw n https://www.toptal.com/developers/gitignore/api/$@ ;}
+function zshtime() {for i in $(seq 1 10); do /usr/bin/time zsh -i -c exit; done}
+
+# profile load time
+# zprof | head
