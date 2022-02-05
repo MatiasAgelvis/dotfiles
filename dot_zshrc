@@ -1,103 +1,128 @@
-# zmodload -a zsh/zprof zprof
+# Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
+# Initialization code that may require console input (password prompts, [y/n]
+# confirmations, etc.) must go above this block; everything else may go below.
+if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
+  source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
+fi
 
+# zmodload -a zsh/zprof zprof
+# ZSH_THEME="robbyrussell"
+# ZSH_THEME="spaceship-prompt/spaceship-prompt"
+# ZSH_THEME="starship/starship"
+ZSH_THEME="romkatv/powerlevel10k"
+
+# ----- Antigen -----
+# activate Antigen
+source /usr/local/share/antigen/antigen.zsh
+# antigen init ~/.antigenrc
+# Bundles from the default repo (robbyrussell's oh-my-zsh).
+antigen use oh-my-zsh
+antigen theme "$ZSH_THEME"
+
+antigen bundle command-not-found
+antigen bundle colored-man-pages
+antigen bundle compleat
+antigen bundle aws
+antigen bundle gcloud
+antigen bundle colorize
+antigen bundle zsh-users/zsh-history-substring-search
+antigen bundle zsh-users/zsh-completions
+
+# antigen bundle mroth/evalcache
+ZSH_PYENV_LAZY_VIRTUALENV=true
+antigen bundle davidparsson/zsh-pyenv-lazy
+antigen bundle kadaan/zsh-rbenv-lazy
+antigen bundle shihyuho/zsh-jenv-lazy
+
+
+# ----- Oh-my-zsh -----
+# Path to your oh-my-zsh installation.
+# export ZSH="/Users/matiasagelvis/.oh-my-zsh"
+# source $ZSH/oh-my-zsh.sh
+# source /usr/local/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+
+# ----- Path -----
 # If you come from bash you might have to change your $PATH.
 PATH="/usr/local/bin:/usr/local/sbin:${PATH}"
-# Setting PATH for Python
-# PATH="${HOME}/.pyenv/bin:${PATH}"
-# PATH="/usr/local/opt/python@3.8/bin:${PATH}"
-# Setting PATH for Ruby
-# PATH="${HOME}/.rbenv/bin:${PATH}"
 # Setting PATH for LaTeX
 PATH="/Library/TeX/texbin:${PATH}"
-# Setting PATH for SML/NJ
-PATH="/usr/local/smlnj/bin:${PATH}"
-# Add yarn global bin
-PATH="/usr/local/bin:${PATH}"
+export PATH
 
 SDKROOT="/Library/Developer/CommandLineTools/SDKs/MacOSX10.15.sdk"
 
-# activate Antigen
-source /usr/local/share/antigen/antigen.zsh
-antigen init ~/.antigenrc
-
 # activate ENVs
+# Too slow
+# eval "$(pyenv init --path)"
+# eval "$(pyenv init -)"
+# eval "$(pyenv virtualenv-init -)"
 
-# eval "$(jenv init - --no-rehash)"
-lazyload 'eval "$(jenv init - --no-rehash)"' jenv
-# eval "$(rbenv init - --no-rehash)"
-lazyload 'eval "$(rbenv init - --no-rehash)"' rbenv
-
-eval "$(pyenv init --path)"
-eval "$(pyenv init - --no-rehash)"
-eval "$(pyenv virtualenv-init -)"
-
-export PATH
-
+# ----- Editors -----
 # Setup the default editor for Homebrew
 HOMEBREW_EDITOR=subl
 
-# Path to your oh-my-zsh installation.
-export ZSH="/Users/matiasagelvis/.oh-my-zsh"
-
-ZSH_THEME="robbyrussell"
+# Preferred editor for local and remote sessions
+if [[ -n $SSH_CONNECTION ]]; then
+  export EDITOR='subl'
+else
+  export EDITOR='rmate'
+fi
 
 # Uncomment the following line to enable command auto-correction.
 ENABLE_CORRECTION="true"
 
-# Uncomment the following line if you want to disable marking untracked files
-# under VCS as dirty. This makes repository status check for large repositories
-# much, much faster.
-# DISABLE_UNTRACKED_FILES_DIRTY="true"
-
-source $ZSH/oh-my-zsh.sh
-source /usr/local/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
-
-# User configuration
-
-export MANPATH="/usr/local/man:$MANPATH"
-# add the TeX MAN
-export MANPATH=/Library/TeX/Distributions/.DefaultTeX/Contents/Man:$MANPATH
-
-# You may need to manually set your language environment
-export LANG=en_US.UTF-8
-
-# Preferred editor for local and remote sessions
-# if [[ -n $SSH_CONNECTION ]]; then
-#   export EDITOR='vim'
-# else
-#   export EDITOR='mvim'
-# fi
-
-# Example aliases
+# ----- Aliases -----
 alias zshconfig="subl ~/.zshrc"
 alias zshreload="exec zsh"
 alias ohmyzsh="subl ~/.oh-my-zsh"
+alias antigenconfig="subl ~/.antigenrc"
 alias git='/usr/local/bin/git'
 alias jula="jupyter-lab"
 alias nubrew="HOMEBREW_NO_AUTO_UPDATE=1; brew"
 alias gpin="ping 8.8.8.8"
 alias brewpython="/usr/local/bin/python3"
 
-# bind 0x15 to backward-kill-line like in the rest of the OS 
-bindkey "^U" backward-kill-line
-
+# ----- Completions -----
 # add bash completions
 autoload bashcompinit
 bashcompinit
-if type brew &>/dev/null; then
-    FPATH=$(brew --prefix)/share/zsh-completions:$FPATH
 
-    autoload -Uz compinit
+FPATH=usr/local/share/zsh-completions:$FPATH
 
-	for dump in ~/.zcompdump(N.mh+24); do
-	  compinit
-	done
-	compinit -C
-fi
+autoload -Uz compinit
+() {
+  if [[ $# -gt 0 ]]; then
+    compinit
+  else
+    compinit -C
+  fi
+} ${ZDOTDIR:-$HOME}/.zcompdump(N.mh+24)
 
+# ----- Functions -----
 # adds the .gitignore generator api to zsh, arguments must be passed separated by a comma (c,c++,...)
 function gi() {curl -sLw n https://www.toptal.com/developers/gitignore/api/$@ ;}
 function zshtime() {for i in $(seq 1 10); do /usr/bin/time zsh -i -c exit; done}
+function load_jenv() {eval "$(jenv init -)"}
+function load_rbenv() {eval "$(rbenv init -)"}
+function load_pyenv (){ 
+												eval "$(pyenv init --path)"; 
+												eval "$(pyenv init -)"; 
+												eval "$(pyenv virtualenv-init -)"
+											}
 
-# profile load time
-# zprof | head
+# You may need to manually set your language environment
+export LANG=en_US.UTF-8
+# bind 0x15 to backward-kill-line like in the rest of the OS 
+bindkey "^U" backward-kill-line
+
+# highlights the tab completion
+# zstyle ':completion:*' menu select
+
+antigen bundle zsh-users/zsh-syntax-highlighting
+antigen apply
+
+# _evalcache starship init zsh
+# eval "$(starship init zsh)"
+
+# To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
+[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
+# source $(brew --prefix)/opt/gitstatus/gitstatus.prompt.zsh
