@@ -1,12 +1,20 @@
 # Bundles from the default repo (robbyrussell's oh-my-zsh).
+antigen use oh-my-zsh
+antigen theme robbyrussell
+
 antigen bundle command-not-found
 antigen bundle colored-man-pages
 antigen bundle compleat
-antigen bundle gcloud
+antigen bundle mroth/evalcache
+# antigen bundle aws
+# antigen bundle gcloud
 antigen bundle colorize
-antigen bundle zsh-users/zsh-history-substring-search ./zsh-history-substring-search.zsh
+antigen bundle zsh-users/zsh-history-substring-search
 antigen bundle zsh-users/zsh-completions
-antigen bundle black7375/zsh-lazyenv
-# antigen bundle zsh-users/zsh-syntax-highlighting
+# antigen bundle davidparsson/zsh-pyenv-lazy
+# antigen bundle black7375/zsh-lazyenv
+
+# MUST BE LAST!
+antigen bundle zsh-users/zsh-syntax-highlighting
 # Tell Antigen that you're done.
 antigen apply

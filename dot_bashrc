@@ -1,10 +1,10 @@
 # If you come from bash you might have to change your $PATH.
 PATH="${HOME}/bin:/usr/local/bin:/usr/local/sbin:${PATH}"
 # Setting PATH for Python
-PATH="${HOME}/.pyenv/bin:${PATH}"
+# PATH="${HOME}/.pyenv/bin:${PATH}"
 # PATH="/usr/local/opt/python@3.8/bin:${PATH}"
 # Setting PATH for Ruby
-PATH="${HOME}/.rbenv/bin:${PATH}"
+# PATH="${HOME}/.rbenv/bin:${PATH}"
 # Setting PATH for LaTeX
 PATH="/Library/TeX/texbin:${PATH}"
 # Setting PATH for SML/NJ
@@ -13,7 +13,6 @@ PATH="/usr/local/smlnj/bin:${PATH}"
 PATH="$(yarn global bin):${PATH}"
 
 SDKROOT="/Library/Developer/CommandLineTools/SDKs/MacOSX10.15.sdk"
-
 
 eval "$(rbenv init -)"
 eval "$(pyenv init --path)"
@@ -40,4 +39,9 @@ alias bashconfig="subl ~/.bashrc"
 
 # adds the .gitignore generator api to bash, arguments must be passed separated by a comma (c,c++,...)
 function gi() {curl -sLw n https://www.toptal.com/developers/gitignore/api/$@ ;}
+. "$HOME/.cargo/env"
 
+[ -f ~/.fzf.bash ] && source ~/.fzf.bash
+export PATH="$PATH:$HOME/.spicetify"
+export VOLTA_HOME="$HOME/.volta"
+export PATH="$VOLTA_HOME/bin:$PATH"

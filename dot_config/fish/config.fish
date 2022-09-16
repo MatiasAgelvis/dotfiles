@@ -10,4 +10,6 @@ end
 # set -g theme_nerd_fonts yes
 # set -g fish_prompt_pwd_dir_length 3
 
-starship init fish | source
+starship init fish | sourceexport PATH="$PATH:$HOME/.spicetify"
+set -gx VOLTA_HOME "$HOME/.volta"
+set -gx PATH "$VOLTA_HOME/bin" $PATH
