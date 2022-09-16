@@ -10,5 +10,5 @@ Dotfiles for:
 	- Vim
 	- Hyper
 
-Chezmoi generates the commits and pushes automatically.
+Chezmoi generates the commits and pushes automatically.  
 Note to self: just use `chezmoi re-add`
