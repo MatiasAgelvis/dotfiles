@@ -120,7 +120,7 @@ export AWS_PROFILE=default
 HOMEBREW_EDITOR=subl
 
 # Preferred editor for local and remote sessions
-if [[ -n $SSH_CONNECTION ]]; then
+if [[ -z ${SSH_CONNECTION+x} ]]; then
   export EDITOR='subl'
 else
   export EDITOR='rmate'
