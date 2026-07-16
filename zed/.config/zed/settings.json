@@ -1,0 +1,202 @@
+{
+  "prettier": {
+    "allowed": false
+  },
+  "text_rendering_mode": "platform_default",
+  "active_pane_modifiers": {
+    "border_size": 0.0
+  },
+  "use_system_window_tabs": false,
+  "focus_follows_mouse": {
+    "enabled": false
+  },
+  "bottom_dock_layout": "right_aligned",
+  "preview_tabs": {
+    "enable_preview_from_file_finder": true
+  },
+  "tab_bar": {
+    "show_pinned_tabs_in_separate_row": false
+  },
+  "tabs": {
+    "file_icons": true,
+    "git_status": true
+  },
+  "title_bar": {
+    "show_menus": false,
+    "show_branch_status_icon": false
+  },
+  "buffer_font_size": 14.0,
+  "status_bar": {
+    "show_active_file": false,
+  },
+  "ui_font_family": ".ZedSans",
+  "ui_font_weight": 400.0,
+  "buffer_font_weight": 400.0,
+  "buffer_line_height": "comfortable",
+  "language_models": {
+    "opencode": {
+      "show_zen_models": false,
+      "show_free_models": true,
+    },
+    "ollama": {
+      "api_url": "https://ollama.com",
+    },
+  },
+  "agent": {
+    "sidebar_side": "left",
+    "single_file_review": true,
+    "commit_message_model": {
+      "provider": "opencode",
+      "model": "go/deepseek-v4-flash"
+    },
+    "tool_permissions": {
+      "tools": {
+        "fetch": {
+          "default": "allow",
+        },
+        "terminal": {
+          "default": "allow",
+          "always_allow": [
+            {
+              "pattern": "^grep\\b",
+            },
+            {
+              "pattern": "^head\\b",
+            },
+            {
+              "pattern": "^sed\\b",
+            },
+          ],
+        },
+      },
+    },
+    "default_profile": "write",
+    "default_model": {
+      "effort": "high",
+      "enable_thinking": true,
+      "model": "go/deepseek-v4-flash",
+      "provider": "opencode",
+    },
+    "dock": "left",
+    "favorite_models": [
+      {
+        "provider": "opencode",
+        "model": "go/deepseek-v4-flash",
+        "enable_thinking": true,
+        "effort": "high"
+      },
+      {
+        "provider": "opencode",
+        "model": "go/deepseek-v4-pro",
+        "enable_thinking": true,
+        "effort": "high"
+      }
+    ],
+    "inline_assistant_model": {
+      "enable_thinking": false,
+      "model": "go/deepseek-v4-flash",
+      "provider": "opencode",
+    },
+  },
+  "agent_buffer_font_size": 12.0,
+  "agent_servers": {
+    "pi-acp": {
+      "type": "registry",
+    },
+    "cline": {
+      "type": "registry",
+    },
+    "opencode": {
+      "default_config_options": {
+        "effort": "medium",
+        "model": "opencode-go/deepseek-v4-flash",
+      },
+      "favorite_config_option_values": {
+        "effort": [
+          "medium"
+        ],
+      },
+      "type": "registry",
+    },
+    "github-copilot-cli": {
+      "type": "registry",
+    },
+    "goose": {
+      "default_config_options": {
+        "provider": "opencode_go",
+      },
+      "type": "registry",
+    },
+  },
+  "base_keymap": "VSCode",
+  "buffer_font_features": {
+    "calt": false,
+  },
+  "cli_default_open_behavior": "new_window",
+  "collaboration_panel": {
+    "dock": "right",
+  },
+  "debugger": {
+    "dock": "right",
+  },
+  "diff_view_style": "unified",
+  "edit_predictions": {
+    "mode": "eager",
+    "ollama": {
+      "api_url": "http://localhost:11434",
+      "model": "qwen2.5-coder:3b-base",
+      "max_output_tokens": 64,
+      "prompt_format": "infer",
+    },
+    "open_ai_compatible_api": {
+      "model": "",
+      "api_url": "",
+    },
+    "provider": "codestral",
+  },
+  "git": {
+    "inline_blame": {
+      "delay_ms": 0,
+      "enabled": false,
+    },
+  },
+  "git_panel": {
+    "dock": "right",
+    "tree_view": false,
+  },
+  "icon_theme": "Zed (Default)",
+  "minimap": {
+    "show": "never",
+  },
+  "outline_panel": {
+    "dock": "right",
+  },
+  "project_panel": {
+    "button": true,
+    "dock": "right",
+  },
+  "terminal": {
+    "font_weight": 400.0,
+    "minimum_contrast": 25.0,
+    "font_family": "MesloLGS NF",
+    "font_size": 13,
+    "shell": {
+      "program": "/opt/homebrew/bin/fish",
+    },
+  },
+  "theme": {
+    "dark": "Ayu Dark",
+    "light": "One Light",
+    "mode": "system",
+  },
+  "wrap_guides": [
+    120
+  ],
+  "inline_code_actions": true,
+  "languages": {
+    "Git Commit": {
+      "show_edit_predictions": true,
+      "edit_predictions_disabled_in": []
+    }
+  }
+}
