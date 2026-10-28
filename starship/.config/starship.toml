@@ -1,7 +1,7 @@
 "$schema" = 'https://starship.rs/config-schema.json'
 
 # Use custom format
-format = '''$os$hostname$username$directory $fill $all
+format = '''$os$username$hostname$directory $fill $all
 $character'''
 
 # right_format = ''''''
@@ -32,7 +32,7 @@ time_format = '%T'
 [username]
 style_user = 'bold'
 style_root = 'black bold'
-format = '[$user]($style) '
+format = '[$user]($style)'
 disabled = false
 show_always = false
 # aliases = { "matiasagelvis" = "MAD" }
@@ -169,7 +169,7 @@ symbol = " "
 [hostname]
 ssh_symbol = " "
 ssh_only = true
-format = '[$ssh_symbol](bold blue) on [$hostname](bold red)'
+format = '[@](dimmed)[$hostname](bold red) '
 disabled = false
 aliases = { "Matias-Mac-mini" = "MacMini" }
 
