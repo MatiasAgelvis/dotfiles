@@ -2,6 +2,26 @@
 
 Managed with [GNU Stow](https://www.gnu.org/software/stow/).
 
+## Layout
+
+```
+dotfiles/
+├── git/ fish/ mise/ starship/ ...   # stow packages, paths mirror $HOME
+├── bootstrap/
+│   ├── lib.sh                       # shared helpers (stow, fisher, backups)
+│   ├── linux.sh                     # Ubuntu/Debian
+│   └── macos.sh                     # macOS
+├── packages/
+│   └── apt-ubuntu.txt               # apt manifest consumed by linux.sh
+├── docs/
+│   └── server.md                    # notes for the homelab box
+└── README.md
+```
+
+**Package policy:** system packages come from apt (Linux) or Homebrew (macOS);
+interactive CLI tools and runtimes come from **mise**, so both machines run the
+same versions. Anything scripts or `sudo` must find stays in apt.
+
 ## Packages
 
 | Package | Files |
@@ -9,9 +29,10 @@ Managed with [GNU Stow](https://www.gnu.org/software/stow/).
 | `git` | `~/.gitconfig` |
 | `git-darwin` | `~/.gitconfig.darwin` (macOS only: Kaleidoscope, Credential Manager) |
 | `fish` | `~/.config/fish/config.fish` |
-| `mise` | `~/.config/mise/config.toml` |
+| `mise` | `~/.config/mise/config.toml` (runtimes + CLI tools) |
 | `starship` | `~/.config/starship.toml` |
-| `zed` | `~/.config/zed/settings.json`, `keymap.json` |
+| `zed` | `~/.config/zed/settings.json`, `keymap.json` (macOS only) |
+| `homebrew` | `~/.Brewfile` (macOS only, not committed yet) |
 
 ## Quick reference
 
@@ -72,39 +93,38 @@ stow -D -t ~ <package>
 
 ```sh
 cd ~/documents/dev/dotfiles
-stow -R -t ~ git git-darwin fish mise starship zed
+stow -R -t ~ git git-darwin fish mise starship zed homebrew
 ```
 
 ### Setup on a new machine
+
+Both scripts are idempotent and back up conflicting files to
+`~/.dotfiles-backup/<timestamp>/` instead of deleting them.
+
+**Linux (Ubuntu/Debian)**
+
+```sh
+git clone https://github.com/MatiasAgelvis/dotfiles ~/dotfiles
+~/dotfiles/bootstrap/linux.sh           # apt, mise, dotfiles, fish plugins
+~/dotfiles/bootstrap/linux.sh --chsh    # ...plus fish as the login shell
+```
 
 **macOS**
 
 ```sh
 brew install stow
 git clone https://github.com/MatiasAgelvis/dotfiles ~/documents/dev/dotfiles
-cd ~/documents/dev/dotfiles
-stow -t ~ git git-darwin fish mise starship zed
-# If using fisher:
-fisher install jethrokuan/z patrickf1/fzf.fish
+~/documents/dev/dotfiles/bootstrap/macos.sh
 ```
 
-**Linux (Debian/Ubuntu)** — use the bootstrap script; it installs packages,
-works around Debian's `batcat`/`fdfind` names, backs up conflicting files to
-`~/.dotfiles-backup/<timestamp>/`, then stows and restores fisher plugins:
-
-```sh
-git clone https://github.com/MatiasAgelvis/dotfiles ~/dotfiles
-~/dotfiles/bootstrap/linux.sh --chsh   # --chsh makes fish the login shell
-```
-
-`zed` (GUI editor) and `mise` (Node/Python runtimes) are intentionally not
-installed on servers. See `docs/server.md` for machine-specific notes.
+`zed` (GUI editor), `git-darwin`, and `homebrew` are only stowed on macOS. On
+servers, CLI tools come from mise; see `docs/server.md` for machine notes.
 
 ## Stow rules
 
 - The file path inside a package mirrors the path from `$HOME`
 - Always use `-t ~` to target the home directory (stow's default target is the parent — `~/documents/dev/`)
-- Run all stow commands from `~/documents/dev/dotfiles`
+- Run all stow commands from the repo root (`~/dotfiles` on Linux, `~/documents/dev/dotfiles` on macOS)
 
 ## What's NOT tracked (by choice)
 

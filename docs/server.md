@@ -46,6 +46,16 @@ Let's Encrypt certs exist for `docs.*`, `api.docs.*`, `docs-fs.*`,
 4. No verified backup job for the Affine Postgres or PocketBase data.
 5. `matias` is in the `docker` group (root-equivalent).
 
+## Tooling
+
+System packages come from apt (`packages/apt-ubuntu.txt`); interactive CLI
+tools come from mise (`mise/config.toml`). Two consequences:
+
+- `sudo <tool>` and systemd units do **not** see mise's binaries. If a tool is
+  ever needed by root or a service, install it via apt and adjust PATH order.
+- `mise upgrade` is the only path to security patches for those tools — apt's
+  unattended-upgrades does not cover them.
+
 ## Rebuild order
 
 1. Base OS install, static IP on the LAN.
