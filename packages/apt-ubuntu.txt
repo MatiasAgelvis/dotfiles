@@ -1,13 +1,13 @@
 # Ubuntu system packages for the homelab server.
 #
 # This file is repo-internal (not stowed): it is an input for
-# scripts/bootstrap.sh, not a file that must live at a $HOME path.
+# bootstrap/linux.sh, not a file that must live at a $HOME path.
 #
 # Refresh from the real machine:
-#   apt-mark showmanual | sort > ubuntu/apt-packages.txt
+#   apt-mark showmanual | sort > packages/apt-ubuntu.txt
 #
 # Restore on a fresh box:
-#   grep -vE '^[[:space:]]*(#|$)' ubuntu/apt-packages.txt | xargs sudo apt-get install -y
+#   sudo apt-get install -y $(grep -vE '^[[:space:]]*(#|$)' packages/apt-ubuntu.txt)
 #
 # Caveats:
 #   - `apt-mark showmanual` also lists whatever the base image preseeded
@@ -15,7 +15,7 @@
 #   - Package names drift between releases: libssl3 -> libssl3t64 in 24.04.
 #     Record the release this was captured on.
 #
-# Captured on: <TODO: Ubuntu release, e.g. 24.04 LTS>
+# Captured on: Ubuntu 26.04.1 LTS (resolute)
 
 # --- bootstrap -------------------------------------------------------------
 build-essential
