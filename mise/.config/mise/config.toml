@@ -1,3 +1,17 @@
 [tools]
 node = "lts"
 python = "3.13"
+
+# Interactive CLI tools. Installed by mise rather than apt so macOS and Ubuntu
+# run the same versions; `mise upgrade` is the way to patch them. Note that
+# sudo and systemd do not see these — see docs/server.md.
+bat = "latest"
+fd = "latest"
+ripgrep = "latest"
+fzf = "latest"
+jq = "latest"
+yq = "latest"
+gh = "latest"
+starship = "latest"
+direnv = "latest"
+uv = "latest"
