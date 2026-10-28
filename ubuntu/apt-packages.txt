@@ -1,0 +1,40 @@
+# Ubuntu system packages for the homelab server.
+#
+# This file is repo-internal (not stowed): it is an input for
+# scripts/bootstrap.sh, not a file that must live at a $HOME path.
+#
+# Refresh from the real machine:
+#   apt-mark showmanual | sort > ubuntu/apt-packages.txt
+#
+# Restore on a fresh box:
+#   grep -vE '^[[:space:]]*(#|$)' ubuntu/apt-packages.txt | xargs sudo apt-get install -y
+#
+# Caveats:
+#   - `apt-mark showmanual` also lists whatever the base image preseeded
+#     (kernel headers, cloud-init, snap tooling). Prune those by hand.
+#   - Package names drift between releases: libssl3 -> libssl3t64 in 24.04.
+#     Record the release this was captured on.
+#
+# Captured on: <TODO: Ubuntu release, e.g. 24.04 LTS>
+
+# --- bootstrap -------------------------------------------------------------
+build-essential
+ca-certificates
+curl
+git
+rsync
+stow
+unzip
+
+# --- shell ----------------------------------------------------------------
+# fish is used as the login shell on both machines.
+fish
+
+# --- server basics --------------------------------------------------------
+htop
+mosh
+tmux
+
+# NOTE: CLI tools (bat, fd, ripgrep, fzf, jq, yq, gh, starship, direnv, uv)
+# are installed through mise so macOS and Ubuntu stay on the same versions.
+# Do not duplicate them here -- apt versions would shadow or lag behind.
