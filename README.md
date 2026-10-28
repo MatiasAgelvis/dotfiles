@@ -7,6 +7,7 @@ Managed with [GNU Stow](https://www.gnu.org/software/stow/).
 | Package | Files |
 |---|---|
 | `git` | `~/.gitconfig` |
+| `git-darwin` | `~/.gitconfig.darwin` (macOS only: Kaleidoscope, Credential Manager) |
 | `fish` | `~/.config/fish/config.fish` |
 | `mise` | `~/.config/mise/config.toml` |
 | `starship` | `~/.config/starship.toml` |
@@ -76,14 +77,28 @@ stow -R -t ~ git fish mise starship zed
 
 ### Setup on a new machine
 
+**macOS**
+
 ```sh
 brew install stow
 git clone https://github.com/MatiasAgelvis/dotfiles ~/documents/dev/dotfiles
 cd ~/documents/dev/dotfiles
-stow -t ~ git fish mise starship zed
+stow -t ~ git git-darwin fish mise starship zed
 # If using fisher:
 fisher install jethrokuan/z patrickf1/fzf.fish
 ```
+
+**Linux (Debian/Ubuntu)** — use the bootstrap script; it installs packages,
+works around Debian's `batcat`/`fdfind` names, backs up conflicting files to
+`~/.dotfiles-backup/<timestamp>/`, then stows and restores fisher plugins:
+
+```sh
+git clone https://github.com/MatiasAgelvis/dotfiles ~/dotfiles
+~/dotfiles/bootstrap/linux.sh --chsh   # --chsh makes fish the login shell
+```
+
+`zed` (GUI editor) and `mise` (Node/Python runtimes) are intentionally not
+installed on servers. See `docs/server.md` for machine-specific notes.
 
 ## Stow rules
 

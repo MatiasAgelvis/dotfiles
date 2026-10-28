@@ -1,18 +1,14 @@
 [user]
 	name = Matias Agelvis
 	email = magelvisdoz@gmail.com
-[difftool "Kaleidoscope"]
-	cmd = ksdiff --partial-changeset --relative-path \"$MERGED\" -- \"$LOCAL\" \"$REMOTE\"
-[mergetool "Kaleidoscope"]
-	cmd = ksdiff --merge --output \"$MERGED\" --base \"$BASE\" -- \"$LOCAL\" --snapshot \"$REMOTE\" --snapshot
-	trustExitCode = true
 [core]
 	editor = vim
 [gitbutler]
 	aiOpenAIKeyOption = bringYourOwn
 	aiModelProvider = openrouter
-[credential]
-	helper = 
-	helper = /usr/local/share/gcm-core/git-credential-manager
-[credential "https://dev.azure.com"]
-	useHttpPath = true
+
+# macOS-only bits (Kaleidoscope difftool, Git Credential Manager).
+# Stowed separately via the `git-darwin` package; ignored when absent, so this
+# is safe on Linux.
+[include]
+	path = ~/.gitconfig.darwin
