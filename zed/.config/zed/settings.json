@@ -1,4 +1,5 @@
 {
+  "proxy": "",
   "prettier": {
     "allowed": false
   },
@@ -29,28 +30,43 @@
   "status_bar": {
     "show_active_file": false,
   },
-  "ui_font_family": ".ZedSans",
+  "ui_font_family": "IBM Plex Sans",
   "ui_font_weight": 400.0,
   "buffer_font_weight": 400.0,
   "buffer_line_height": "comfortable",
   "language_models": {
     "opencode": {
       "show_zen_models": false,
-      "show_free_models": true,
     },
     "ollama": {
       "api_url": "https://ollama.com",
     },
   },
   "agent": {
-    "sidebar_side": "left",
+    "threads_sidebar": {
+      "position": "left"
+    },
+    "sandbox_permissions": {
+      "network_hosts": [
+        "pocketbase.io",
+        "gist.github.com"
+      ]
+    },
     "single_file_review": true,
     "commit_message_model": {
       "provider": "opencode",
-      "model": "go/deepseek-v4-flash"
+      // "model": "go/mimo-v2.5",
+      "model": "go/minimax-m3"
     },
     "tool_permissions": {
       "tools": {
+        "create_directory": {
+          "always_allow": [
+            {
+              "pattern": "^alberich/apps/web/src/"
+            }
+          ]
+        },
         "fetch": {
           "default": "allow",
         },
@@ -74,14 +90,19 @@
     "default_model": {
       "effort": "high",
       "enable_thinking": true,
-      "model": "go/deepseek-v4-flash",
+      "model": "go/deepseek-v4.1-flash",
       "provider": "opencode",
     },
     "dock": "left",
     "favorite_models": [
       {
         "provider": "opencode",
-        "model": "go/deepseek-v4-flash",
+        "model": "go/minimax-m3",
+        "enable_thinking": false
+      },
+      {
+        "provider": "opencode",
+        "model": "go/glm-5.3-flash",
         "enable_thinking": true,
         "effort": "high"
       },
@@ -90,11 +111,50 @@
         "model": "go/deepseek-v4-pro",
         "enable_thinking": true,
         "effort": "high"
+      },
+      {
+        "provider": "opencode",
+        "model": "go/mimo-v2.6-pro",
+        "enable_thinking": true
+      },
+      {
+        "provider": "opencode",
+        "model": "go/deepseek-v4.1-flash",
+        "enable_thinking": true,
+        "effort": "high"
+      },
+      {
+        "provider": "opencode",
+        "model": "go/step-5-preview-free",
+        "enable_thinking": true,
+        "effort": "high"
+      },
+      {
+        "provider": "opencode",
+        "model": "go/qwen3.8-flash",
+        "enable_thinking": true,
+        "effort": "medium"
+      },
+      {
+        "provider": "opencode",
+        "model": "go/muse-spark-1.3-contributor",
+        "enable_thinking": true,
+        "effort": "xhigh"
+      },
+      {
+        "provider": "opencode",
+        "model": "go/longcat-2.5-preview-free",
+        "enable_thinking": true
+      },
+      {
+        "provider": "opencode",
+        "model": "go/mimo-v2.6-flash",
+        "enable_thinking": true
       }
     ],
     "inline_assistant_model": {
       "enable_thinking": false,
-      "model": "go/deepseek-v4-flash",
+      "model": "go/mimo-2.5",
       "provider": "opencode",
     },
   },
@@ -109,7 +169,7 @@
     "opencode": {
       "default_config_options": {
         "effort": "medium",
-        "model": "opencode-go/deepseek-v4-flash",
+        "model": "opencode-go/minimax-m3",
       },
       "favorite_config_option_values": {
         "effort": [
@@ -141,18 +201,21 @@
   },
   "diff_view_style": "unified",
   "edit_predictions": {
+    "mercury": {
+      "prediction_debounce": 100
+    },
     "mode": "eager",
     "ollama": {
       "api_url": "http://localhost:11434",
-      "model": "qwen2.5-coder:3b-base",
-      "max_output_tokens": 64,
-      "prompt_format": "infer",
+      "model": "zeta2.1:latest",
+      "max_output_tokens": 512,
+      "prompt_format": "zeta2_1",
     },
     "open_ai_compatible_api": {
       "model": "",
       "api_url": "",
     },
-    "provider": "codestral",
+    "provider": "mercury",
   },
   "git": {
     "inline_blame": {
