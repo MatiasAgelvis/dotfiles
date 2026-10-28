@@ -72,7 +72,7 @@ stow -D -t ~ <package>
 
 ```sh
 cd ~/documents/dev/dotfiles
-stow -R -t ~ git fish mise starship zed
+stow -R -t ~ git git-darwin fish mise starship zed
 ```
 
 ### Setup on a new machine
