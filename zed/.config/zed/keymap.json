@@ -17,5 +17,10 @@
     "bindings": {
       // "j k": ["workspace::SendKeystrokes", "escape"]
     }
+  },
+  {
+    "unbind": {
+      "ctrl-cmd-i": "edit_prediction::ToggleMenu"
+    }
   }
 ]
