@@ -7,16 +7,22 @@ like, so it can actually be checked off. Context lives in `docs/server.md`.
 
 ### 1. Key-only SSH, one key per device
 
-Passwords are still accepted (`Accepted password for matias from 192.168.2.1`).
-The Mac's key (`matias@mac-homelab`) is trusted; the PC being used now is not.
-Generate a **new** key on the PC rather than copying the Mac's, so each device
-can be revoked independently.
+Passwords were accepted until 2026-10-29 (`Accepted password for matias from
+192.168.2.1`). Each device now gets its own key, so they can be revoked
+independently.
+
+**Status: done 2026-10-29.** `matias@Matias-Mac-mini.local-homelab` installed,
+`PasswordAuthentication no` + `AuthenticationMethods publickey` live. Server
+now advertises `publickey` only.
 
 **Done when:** `ssh -o PreferredAuthentications=publickey -o PasswordAuthentication=no <host> true`
 prints `ok` from every machine you use, and `PasswordAuthentication no` is in
 `/etc/ssh/sshd_config.d/99-hardening.conf`.
 
 ### 2. Firewall: deny inbound, LAN only
+
+**Status: done 2026-10-29.** `ufw` active, `deny (incoming)`, 22/80/443
+allowed from `192.168.0.0/16`. Tunnel logins still work (loopback).
 
 **Done when:** `sudo ufw status verbose` shows `deny (incoming)`, and 22/80/443
 are allowed from `192.168.0.0/16` only. A tunnel login still works.

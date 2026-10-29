@@ -85,7 +85,7 @@ fi
 if [ "$keycount" -eq 0 ]; then
   printf '  !! no authorized_keys for %s — refusing to disable password auth\n' "$TARGET_USER"
 elif [ "$SSH_KEY_ONLY" -eq 0 ]; then
-  would "write $SSHD_CONF (PasswordAuthentication no, PermitRootLogin prohibit-password)"
+  would "write $SSHD_CONF (key-only, no X11/agent forwarding)"
   would "validate with sshd -t and reload (add --ssh-key-only to apply)"
 else
   doing "write $SSHD_CONF"

@@ -38,13 +38,14 @@ Let's Encrypt certs exist for `docs.*`, `api.docs.*`, `docs-fs.*`,
 
 ## Known gaps (not yet addressed)
 
-1. `ufw` disabled, `fail2ban` inactive — ports 22/80/443/8000/8080/6001/6002
-   are reachable on the LAN.
-2. Coolify's container publishes `:8000` on `0.0.0.0`, bypassing Traefik/TLS.
-   Traefik's dashboard also publishes `:8080`.
-3. `PasswordAuthentication` is not disabled in `sshd_config`.
-4. No verified backup job for the Affine Postgres or PocketBase data.
-5. `matias` is in the `docker` group (root-equivalent).
+1. Coolify's container publishes `:8000` on `0.0.0.0`, bypassing Traefik/TLS.
+   Traefik's dashboard also publishes `:8080`. Docker's own iptables chain means
+   `ufw` does not filter either (see `docs/todos.md` #3).
+2. No verified backup job for the Affine Postgres or PocketBase data.
+3. `matias` is in the `docker` group (root-equivalent).
+
+Resolved 2026-10-29: `ufw` enabled (deny inbound, LAN-only 22/80/443) and SSH is
+key-only (`docs/todos.md` #1, #2).
 
 ## Tooling
 
