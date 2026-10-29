@@ -1,0 +1,12 @@
+[Unit]
+Description=Homelab off-box backup (restic)
+Documentation=https://github.com/MatiasAgelvis/dotfiles/blob/main/docs/backups.md
+Wants=network-online.target
+After=network-online.target docker.service
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/bin/homelab-backup
+Nice=10
+IOSchedulingClass=best-effort
+IOSchedulingPriority=7

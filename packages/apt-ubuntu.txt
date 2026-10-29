@@ -35,6 +35,10 @@ htop
 mosh
 tmux
 
+# --- backups --------------------------------------------------------------
+restic
+sqlite3
+
 # NOTE: CLI tools (bat, fd, ripgrep, fzf, jq, yq, gh, starship, direnv, uv)
 # are installed through mise so macOS and Ubuntu stay on the same versions.
 # Do not duplicate them here -- apt versions would shadow or lag behind.
