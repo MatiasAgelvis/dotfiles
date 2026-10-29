@@ -64,5 +64,7 @@ if [ "${1:-}" = "--chsh" ]; then
 fi
 
 log "Done."
-[ -d "$BACKUP_DIR" ] && log "Backups: $BACKUP_DIR"
+if [ -d "$BACKUP_DIR" ]; then
+  log "Backups: $BACKUP_DIR"
+fi
 log "Open a new terminal, or run: fish"

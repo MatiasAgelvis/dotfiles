@@ -53,4 +53,6 @@ log "mise install (Node LTS, Python, and the CLI tools)"
 mise install
 
 log "Done."
-[ -d "$BACKUP_DIR" ] && log "Backups: $BACKUP_DIR"
+if [ -d "$BACKUP_DIR" ]; then
+  log "Backups: $BACKUP_DIR"
+fi

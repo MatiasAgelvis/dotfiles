@@ -50,6 +50,13 @@ would() { printf '  would: %s\n' "$*"; }
 
 # --- 1. ufw ------------------------------------------------------------------
 say "Firewall (ufw)"
+if ! command -v ufw >/dev/null 2>&1; then
+  doing "install ufw"
+  if [ "$APPLY" -eq 1 ]; then
+    apt-get install -y ufw
+  fi
+fi
+
 if ufw status 2>/dev/null | grep -q '^Status: active'; then
   doing "ufw already active; ensuring LAN rules exist"
 else
@@ -84,12 +91,17 @@ else
   doing "write $SSHD_CONF"
   doing "reload sshd"
   if [ "$APPLY" -eq 1 ]; then
-    cat >"$SSHD_CONF" <<'EOF'
+    cat >"$SSHD_CONF" <<EOF
 # Managed by dotfiles/scripts/harden-server.sh
 PasswordAuthentication no
 KbdInteractiveAuthentication no
+AuthenticationMethods publickey
 PermitRootLogin prohibit-password
+AllowUsers $TARGET_USER root
+X11Forwarding no
+AllowAgentForwarding no
 MaxAuthTries 3
+LoginGraceTime 20
 EOF
     sshd -t
     systemctl reload ssh
