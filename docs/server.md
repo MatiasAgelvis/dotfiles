@@ -42,10 +42,11 @@ Let's Encrypt certs exist for `docs.*`, `api.docs.*`, `docs-fs.*`,
    Traefik's dashboard also publishes `:8080`. Docker's own iptables chain means
    `ufw` does not filter either (see `docs/todos.md` #3).
 2. No verified backup job for the Affine Postgres or PocketBase data.
-3. `matias` is in the `docker` group (root-equivalent).
 
 Resolved 2026-10-29: `ufw` enabled (deny inbound, LAN-only 22/80/443) and SSH is
 key-only (`docs/todos.md` #1, #2).
+Resolved 2026-10-30: `matias` out of `docker`/`lxd`; read-only Docker via
+`sudoers/docker-readonly` (`docs/todos.md` #9).
 
 ## Tooling
 

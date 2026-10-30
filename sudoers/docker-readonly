@@ -1,0 +1,24 @@
+# Read-only Docker visibility for the admin user. Install with:
+#
+#   sudo install -m 0440 -o root -g root sudoers/docker-readonly /etc/sudoers.d/docker-readonly
+#   sudo visudo -c
+#
+# `matias` is deliberately NOT in the docker group (root-equivalent). This
+# grants metadata-only visibility without a password so everyday checks and
+# tooling still work.
+#
+# Deliberately excluded: `inspect` and `logs`. Coolify's container environment
+# holds APP_KEY; with it one can log into Coolify and open a root terminal, so
+# those are password-gated like every other mutating command.
+
+Cmnd_Alias DOCKER_READ = \
+    /usr/bin/docker ps, /usr/bin/docker ps *, \
+    /usr/bin/docker images, /usr/bin/docker images *, \
+    /usr/bin/docker stats, /usr/bin/docker stats *, \
+    /usr/bin/docker volume ls, /usr/bin/docker volume ls *, \
+    /usr/bin/docker network ls, /usr/bin/docker network ls *, \
+    /usr/bin/docker system df, /usr/bin/docker system df *, \
+    /usr/bin/docker version, \
+    /usr/bin/docker info
+
+matias ALL=(root) NOPASSWD: DOCKER_READ

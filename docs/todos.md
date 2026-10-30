@@ -76,9 +76,11 @@ tunnel token. Realistically this is a reinstall. Decide, don't drift.
 
 ### 9. The `docker` group
 
-`matias` in `docker` is root-equivalent, which quietly defeats a lot of the
-above. The proper fix is `sudo docker` for admin work; the pragmatic choice is
-accepting it. Pick one on purpose and write it down.
+**Status: done 2026-10-30.** `matias` removed from `docker` (root-equivalent)
+and the unused `lxd` group. `sudoers/docker-readonly` grants passwordless
+`ps/images/stats/volume ls/network ls/system df/info` only — `inspect` and
+`logs` stay password-gated, since Coolify's `APP_KEY` plus its web terminal is
+effectively root.
 
 ## Accepted risks
 
