@@ -108,9 +108,16 @@ sqlite3 /tmp/restore/var/backups/homelab/pocketbase-data.db '.tables'
 
 ## The test that makes it real
 
-Once a month: restore `coolify-db` into a scratch container, open one real
-Affine document from `affine-postgres.dump`, and log into Coolify from the
-restored copy. Until that passes, these are files, not backups.
+```sh
+sudo ./scripts/restore-test.sh
+```
+
+Restores the newest snapshot into throwaway containers (no ports published, live
+services untouched), checks the Coolify and Affine schemas plus PocketBase
+integrity, prints `PASS`/`FAIL`, and cleans up. Non-zero exit on failure, so it
+can be put on a monthly timer later.
+
+Once a month is enough. Until it passes, these are files, not backups.
 Tracked as #6 in `docs/todos.md`.
 
 ## Notes

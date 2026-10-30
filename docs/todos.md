@@ -52,9 +52,12 @@ See "What gets backed up" below.
 
 ### 6. Test the restore
 
-**Done when:** a dump from last night is restored into a scratch container and
-you can open a real Affine document and log into Coolify from it. Until this
-passes, item 5 is unproven.
+**Scripted 2026-10-30** as `scripts/restore-test.sh` (latest snapshot → scratch
+containers → schema + row-count assertions → PASS/FAIL). Run monthly:
+
+```sh
+sudo ./scripts/restore-test.sh
+```
 
 ## P2 — Visibility
 
