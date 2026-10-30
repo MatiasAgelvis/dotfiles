@@ -50,12 +50,14 @@ repository is unreadable — there is no recovery.
 ### 3. Install
 
 ```sh
-sudo apt-get install -y restic sqlite3
-sudo install -m 0755 scripts/backup.sh /usr/local/bin/homelab-backup
-sudo install -m 0644 systemd/homelab-backup.service systemd/homelab-backup.timer /etc/systemd/system/
-sudo systemctl daemon-reload
-sudo systemctl enable --now homelab-backup.timer
+sudo ./scripts/install-backup.sh --run
 ```
+
+That installs `restic`/`sqlite3`, copies the script to `/usr/local/bin/homelab-backup`,
+installs the units, enables the timer, and takes a first backup. Safe to re-run
+after editing anything — it's the upgrade path too. If `/etc/restic/env` is
+missing or incomplete, it installs the files but leaves the timer **disabled**
+and says why.
 
 ### 4. First run
 
