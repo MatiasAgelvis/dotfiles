@@ -43,7 +43,9 @@ for v in RESTIC_REPOSITORY RESTIC_PASSWORD; do
 done
 
 # Stable staging path: restic snapshots then have predictable paths to restore.
+# Locked down because the tarballs contain secrets (Coolify .env, DB hashes).
 mkdir -p "$STAGE"
+chmod 700 "$STAGE"
 find "$STAGE" -mindepth 1 -delete
 
 # --- resolve containers ------------------------------------------------------
@@ -100,6 +102,7 @@ if [ -n "$affine" ]; then
 fi
 
 log "staged $(du -sh "$STAGE" | cut -f1)"
+chmod -R go-rwx "$STAGE"
 
 # --- restic ------------------------------------------------------------------
 export RESTIC_HOST=${RESTIC_HOST:-$(hostname)}
