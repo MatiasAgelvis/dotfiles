@@ -90,7 +90,9 @@ fi
 
 # --- file trees --------------------------------------------------------------
 log "tar /data/coolify"
-tar -czf "$STAGE/coolify-data.tar.gz" -C /data coolify
+# ssh/mux holds live sockets (Coolify's multiplexer); not worth archiving.
+tar -czf "$STAGE/coolify-data.tar.gz" -C /data \
+  --exclude='coolify/ssh/mux' coolify
 
 if [ -n "$affine" ]; then
   storage=$(docker inspect "$affine" \

@@ -47,9 +47,8 @@ This is a manual check on the router; nothing on the box can prove it.
 
 See "What gets backed up" below.
 
-**Done when:** a `systemd` timer runs nightly, the repo has an off-box copy
-(another disk **and** an offsite target), and `restic snapshots` shows at least
-two successful runs. Encryption is on; nothing readable is stored off-box.
+**Status: done 2026-10-30.** `homelab-backup.timer` enabled, next run 03:30 UTC
+(±5 min). Two snapshots in R2, retention 7/4/6 applied, cache dir configured.
 
 ### 6. Test the restore
 
