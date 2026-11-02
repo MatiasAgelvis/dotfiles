@@ -31,7 +31,8 @@ phys_ifaces() {
 }
 
 upstream_ok() {
-  ping -I "$1" -c1 -W2 -q 1.1.1.1 >/dev/null 2>&1
+  # -c2: wifi drops the odd ICMP packet; one loss isn't "no upstream".
+  ping -I "$1" -c2 -W2 -q 1.1.1.1 >/dev/null 2>&1
 }
 
 # ── interfaces ────────────────────────────────────────────────────────────────
