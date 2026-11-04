@@ -62,6 +62,7 @@ if ufw status 2>/dev/null | grep -q '^Status: active'; then
 else
   doing "default deny incoming / allow outgoing"
   doing "allow ssh/http/https from $LAN only"
+  doing "allow ssh from docker networks (Coolify control plane)"
   doing "enable ufw"
   if [ "$APPLY" -eq 1 ]; then
     ufw --force default deny incoming
@@ -69,6 +70,10 @@ else
     ufw allow from "$LAN" to any port 22 proto tcp comment 'ssh from LAN'
     ufw allow from "$LAN" to any port 80 proto tcp comment 'http from LAN'
     ufw allow from "$LAN" to any port 443 proto tcp comment 'https from LAN'
+    # Coolify (and anything else in a container) SSHes to the host as root from
+    # the docker bridges. Without this its control plane hangs at boot: the s6
+    # oneshot never finishes, so Horizon never starts and deploys queue forever.
+    ufw allow from 10.0.0.0/8 to any port 22 proto tcp comment 'docker networks -> host ssh'
     ufw --force enable
   fi
 fi
