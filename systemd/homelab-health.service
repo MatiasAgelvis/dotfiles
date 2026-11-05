@@ -1,0 +1,9 @@
+[Unit]
+Description=Homelab health checks (alerts via ntfy)
+After=docker.service network-online.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/bin/homelab-health-check
+# Non-zero exit only means "problems found"; don't mark the unit failed.
+SuccessExitStatus=0 1
