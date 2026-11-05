@@ -12,6 +12,7 @@ set -euo pipefail
 
 DOTFILES=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd)
 ENV_FILE=${ENV_FILE:-/etc/homelab-health/env}
+NTFY_URL=${NTFY_URL:-https://ntfy.sh}
 
 log() { printf '\n\033[1;34m==>\033[0m %s\n' "$*"; }
 die() {
@@ -39,17 +40,18 @@ BACKUP_MAX_AGE_H=36
 EOF
   chmod 600 "$ENV_FILE"
   log "Created $ENV_FILE"
-  cat <<EOF
-
-  Subscribe on your phone (ntfy app) to:
-
-      $NTFY_URL/$topic
-
-  or open: $NTFY_URL/$topic
-
-EOF
 else
   log "Keeping existing $ENV_FILE"
+fi
+
+# Always print the subscription details, whether we just created the file or not.
+# shellcheck disable=SC1090
+. "$ENV_FILE"
+if [ -n "${NTFY_TOPIC:-}" ]; then
+  printf '\n  Subscribe on your phone (ntfy app) to:\n\n      %s\n\n  or open: %s\n\n' \
+    "${NTFY_URL:-https://ntfy.sh}/${NTFY_TOPIC}" "${NTFY_URL:-https://ntfy.sh}/${NTFY_TOPIC}"
+else
+  printf '\n  !! NTFY_TOPIC is empty in %s — no alerts will be sent\n\n' "$ENV_FILE"
 fi
 
 systemctl daemon-reload
