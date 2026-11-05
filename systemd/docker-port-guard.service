@@ -1,0 +1,11 @@
+[Unit]
+Description=Keep Docker-published ports off the WAN (ufw cannot see them)
+After=docker.service
+Requires=docker.service
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/bin/close-docker-ports
+
+[Install]
+WantedBy=multi-user.target
