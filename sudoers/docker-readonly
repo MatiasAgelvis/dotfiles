@@ -24,9 +24,10 @@ Cmnd_Alias DOCKER_READ = \
     /usr/bin/docker compose ps, /usr/bin/docker compose ps *, \
     /usr/bin/docker compose ls, /usr/bin/docker compose ls *, \
     /usr/bin/docker compose logs, /usr/bin/docker compose logs *, \
-    /usr/bin/docker compose config, /usr/bin/docker compose config *, \
-    /usr/bin/docker compose -f * ps, /usr/bin/docker compose -f * ps *, \
-    /usr/bin/docker compose -f * logs, /usr/bin/docker compose -f * logs *, \
-    /usr/bin/docker compose -f * config, /usr/bin/docker compose -f * config *
+    /usr/bin/docker compose config, /usr/bin/docker compose config *
+
+# Note: run these from the stack directory (`cd ~/dotfiles/server/traefik`)
+# rather than passing `-f <file>` — sudo only allows a wildcard as the final
+# argument, not in the middle of one.
 
 matias ALL=(root) NOPASSWD: DOCKER_READ
