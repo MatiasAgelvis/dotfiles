@@ -5,11 +5,12 @@
 #
 # `matias` is deliberately NOT in the docker group (root-equivalent). This
 # grants metadata-only visibility without a password so everyday checks and
-# tooling still work.
+# tooling still work. Anything that mutates state stays password-gated.
 #
-# Deliberately excluded: `inspect` and `logs`. Coolify's container environment
-# holds APP_KEY; with it one can log into Coolify and open a root terminal, so
-# those are password-gated like every other mutating command.
+# Deliberately excluded: `inspect` and `logs` for raw containers. The Coolify
+# container used to hold APP_KEY, and with it one could open a root terminal;
+# even now, env vars carry secrets. Compose logs are fine, container inspect
+# is not.
 
 Cmnd_Alias DOCKER_READ = \
     /usr/bin/docker ps, /usr/bin/docker ps *, \
@@ -19,6 +20,13 @@ Cmnd_Alias DOCKER_READ = \
     /usr/bin/docker network ls, /usr/bin/docker network ls *, \
     /usr/bin/docker system df, /usr/bin/docker system df *, \
     /usr/bin/docker version, \
-    /usr/bin/docker info
+    /usr/bin/docker info, \
+    /usr/bin/docker compose ps, /usr/bin/docker compose ps *, \
+    /usr/bin/docker compose ls, /usr/bin/docker compose ls *, \
+    /usr/bin/docker compose logs, /usr/bin/docker compose logs *, \
+    /usr/bin/docker compose config, /usr/bin/docker compose config *, \
+    /usr/bin/docker compose -f * ps, /usr/bin/docker compose -f * ps *, \
+    /usr/bin/docker compose -f * logs, /usr/bin/docker compose -f * logs *, \
+    /usr/bin/docker compose -f * config, /usr/bin/docker compose -f * config *
 
 matias ALL=(root) NOPASSWD: DOCKER_READ

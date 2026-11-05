@@ -31,7 +31,7 @@ NTFY_URL=${NTFY_URL:-https://ntfy.sh}
 NTFY_TOPIC=${NTFY_TOPIC:-}
 DISK_LIMIT=${DISK_LIMIT:-85}
 BACKUP_MAX_AGE_H=${BACKUP_MAX_AGE_H:-36}
-CLICK_URL=${CLICK_URL:-https://coolify.matiasagelvis.com}
+CLICK_URL=${CLICK_URL:-https://matiasagelvis.com}
 
 mkdir -p "$STATE_DIR" 2>/dev/null || STATE_DIR=/tmp
 STATE_FILE=$STATE_DIR/last_status
@@ -52,13 +52,13 @@ else
 fi
 
 # --- backup freshness --------------------------------------------------------
-dump=/var/backups/homelab/coolify-db.dump
-if [ ! -f "$dump" ]; then
-  fail "no backup staging file ($dump)"
-elif find "$dump" -mmin +$((BACKUP_MAX_AGE_H * 60)) | grep -q .; then
+marker=/var/backups/homelab/manifest.txt
+if [ ! -f "$marker" ]; then
+  fail "no backup staged yet ($marker)"
+elif find "$marker" -mmin +$((BACKUP_MAX_AGE_H * 60)) | grep -q .; then
   fail "last backup older than ${BACKUP_MAX_AGE_H}h"
 else
-  pass "backup staged $(find "$dump" -mmin -60 | grep -q . && echo '<1h' || echo "<=${BACKUP_MAX_AGE_H}h")"
+  pass "backup staged $(find "$marker" -mmin -60 | grep -q . && echo '<1h' || echo "<=${BACKUP_MAX_AGE_H}h")"
 fi
 
 # --- containers --------------------------------------------------------------
@@ -84,11 +84,12 @@ else
 fi
 
 # --- origin answers ----------------------------------------------------------
-code=$(curl -sk -o /dev/null -w '%{http_code}' --max-time 5 \
-  https://127.0.0.1/ -H "Host: coolify.matiasagelvis.com" 2>/dev/null)
+# Traefik serves /ping on its http entrypoint; 200 means the proxy is alive.
+code=$(curl -s -o /dev/null -w '%{http_code}' --max-time 5 \
+  http://127.0.0.1/ping 2>/dev/null)
 case "$code" in
-  2?? | 3??) pass "origin :443 answers ($code)" ;;
-  *) fail "origin :443 answers $code" ;;
+  200) pass "traefik answers /ping" ;;
+  *) fail "traefik /ping answered $code" ;;
 esac
 
 # --- clock -------------------------------------------------------------------

@@ -1,0 +1,30 @@
+services:
+  traefik:
+    image: traefik:v3.7
+    container_name: traefik
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+      - "443:443/udp"
+    volumes:
+      # No Docker socket on purpose: routes are declared in dynamic/routes.yaml.
+      # That keeps this container from having the Docker API (root-equivalent).
+      - ./dynamic:/etc/traefik/dynamic:ro
+      - ./certs:/etc/traefik/certs:ro
+    command:
+      - --global.checknewversion=false
+      - --global.sendanonymoususage=false
+      - --log.level=INFO
+      - --entrypoints.http.address=:80
+      - --entrypoints.https.address=:443
+      - --entrypoints.https.http3
+      - --providers.file.directory=/etc/traefik/dynamic
+      - --providers.file.watch=true
+      # /ping is used by homelab-health-check; served on the http entrypoint.
+      - --ping=true
+      - --ping.entrypoint=http
+
+networks:
+  default:
+    name: traefik

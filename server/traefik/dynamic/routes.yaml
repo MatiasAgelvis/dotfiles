@@ -1,0 +1,25 @@
+# Application routes.
+#
+# Everything here is plain YAML: edit, save, and Traefik reloads (file watch).
+# Containers are reached by name over the `traefik` network, e.g. http://app:3000
+#
+# To add an app:
+#   1. give its compose service `networks: [traefik]` (network name: traefik)
+#   2. add a router + service below
+#   3. `sudo docker compose -f ~/dotfiles/server/<app>/docker-compose.yml up -d`
+#
+# Example (delete the leading # to use):
+#
+# http:
+#   routers:
+#     pocketbase:
+#       rule: Host(`pocketbase.matiasagelvis.com`)
+#       entryPoints: [https]
+#       tls: {}
+#       service: pocketbase
+#   services:
+#     pocketbase:
+#       loadBalancer:
+#         servers:
+#           - url: http://pocketbase:8080
+http: {}

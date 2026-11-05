@@ -65,7 +65,11 @@ dump_pg() {
     die "pg_dump failed for $container"
 }
 
-dump_pg coolify-db "$STAGE/coolify-db.dump"
+if docker ps --format '{{.Names}}' 2>/dev/null | grep -qx 'coolify-db'; then
+  dump_pg coolify-db "$STAGE/coolify-db.dump"
+else
+  log "coolify-db not present, skipping"
+fi
 if [ -n "$affine_pg" ]; then
   dump_pg "$affine_pg" "$STAGE/affine-postgres.dump"
 else
@@ -89,10 +93,14 @@ else
 fi
 
 # --- file trees --------------------------------------------------------------
-log "tar /data/coolify"
-# ssh/mux holds live sockets (Coolify's multiplexer); not worth archiving.
-tar -czf "$STAGE/coolify-data.tar.gz" -C /data \
-  --exclude='coolify/ssh/mux' coolify
+if [ -d /data/coolify ]; then
+  log "tar /data/coolify"
+  # ssh/mux holds live sockets (Coolify's multiplexer); not worth archiving.
+  tar -czf "$STAGE/coolify-data.tar.gz" -C /data \
+    --exclude='coolify/ssh/mux' coolify
+else
+  log "/data/coolify not present, skipping"
+fi
 
 if [ -n "$affine" ]; then
   storage=$(docker inspect "$affine" \
@@ -102,6 +110,15 @@ if [ -n "$affine" ]; then
     tar -czf "$STAGE/affine-storage.tar.gz" -C "$storage" .
   fi
 fi
+
+# Always leave a file behind, even when no services exist yet, so the snapshot
+# is never empty and freshness checks have something to look at.
+{
+  echo "host: $(hostname)"
+  echo "date: $(date -Is)"
+  echo "files:"
+  ls -1 "$STAGE" | sed 's/^/  /'
+} >"$STAGE/manifest.txt"
 
 log "staged $(du -sh "$STAGE" | cut -f1)"
 chmod -R go-rwx "$STAGE"

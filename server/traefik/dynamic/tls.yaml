@@ -1,0 +1,12 @@
+# Wildcard origin certificate (Cloudflare Origin CA).
+#
+# Served for every TLS router, so any *.matiasagelvis.com hostname works without
+# per-host Let's Encrypt. The cert/key are NOT in git — copy them with
+# server/teardown-coolify.sh (it rescues them before removing Coolify) or drop
+# new files in ./certs/.
+tls:
+  stores:
+    default:
+      defaultCertificate:
+        certFile: /etc/traefik/certs/origin.pem
+        keyFile: /etc/traefik/certs/origin.key
