@@ -12,16 +12,23 @@ systemd/starisk-nightly.{service,timer}   # 04:00, Persistent=true
 
 ## What one run does
 
-1. `git fetch` + fast-forward the clone (refuses if it has diverged)
+1. `git fetch`, hard-reset to `origin/main`, and rebuild the bot branch
+   `nightly` (this clone is bot-owned — don't edit it by hand)
 2. `python -m starisk.demand --write` — verifies new requests against Coursera
    and merges them into `data/requests.json`
 3. the `pipeline:crawl` chain — `crawl --max-age 7`, logos, hi-res logos,
    `groupings --write`
 4. `node web/scripts/sync-data.mjs` — copies the data into `web/`
-5. if anything changed: commit `chore(data): nightly crawl <date>` and push
-6. write `~/.local/state/starisk/last-run` (checked by `homelab-health-check`)
-7. `ntfy` digest: the commit summary on a change, "no changes" otherwise, and a
-   high-priority message on failure
+5. refuse to publish if a tracked data file was **deleted** (a parse bug that
+   empties `scores.json` must not reach a branch)
+6. if anything changed: commit as the bot, force-push `nightly`, and open (or
+   refresh) a pull request against `main`
+7. write `~/.local/state/starisk/last-run` (checked by `homelab-health-check`)
+8. `ntfy` digest: commit summary + compare link, "no changes", or a
+   high-priority failure
+
+`main` is never written by the job. Merging the PR publishes production, and the
+branch gets a Vercel preview in the meantime.
 
 `name/*` rows are never automated — they need a human to resolve a slug.
 
@@ -41,12 +48,19 @@ cat > ~/.config/starisk/env <<'EOF'
 TURSO_DATABASE_URL=libsql://<db>-<org>.turso.io
 TURSO_AUTH_TOKEN=<token>
 NTFY_TOPIC=<topic>
+# Optional: a bot PAT with repo scope, so the job can open the PR itself.
+# GH_TOKEN=github_pat_...
 EOF
 chmod 600 ~/.config/starisk/env
 ```
 
 Mint the Turso token with `turso db tokens create <db>` rather than pulling
 Vercel's *Sensitive* variable, which comes through as `{SENSITIVE}`.
+
+Commits are authored as `starisk-bot <starisk-bot@users.noreply.github.com>`.
+Override with `STARISK_BOT_NAME` / `STARISK_BOT_EMAIL` in the env file. The push
+uses the repo-scoped deploy key, not your account; `GH_TOKEN` is only needed for
+automatic pull-request creation.
 
 **3. Install**
 

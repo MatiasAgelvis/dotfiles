@@ -24,6 +24,8 @@ STATE_DIR=${STARISK_STATE:-$HOME/.local/state/starisk}
 MAX_AGE=${STARISK_MAX_AGE:-7}
 LIMIT=${STARISK_LIMIT:-}
 KEY=$HOME/.ssh/id_ed25519_starisk
+BASE=${STARISK_BASE_BRANCH:-main}
+BRANCH=${STARISK_BRANCH:-nightly}
 DRY=0
 [ "${1:-}" = "--dry-run" ] && DRY=1
 
@@ -67,11 +69,20 @@ trap 'on_error $LINENO' ERR
 export PATH="$HOME/.local/share/mise/shims:$PATH"
 export GIT_SSH_COMMAND="ssh -i $KEY -o IdentitiesOnly=yes -o BatchMode=yes -o StrictHostKeyChecking=accept-new"
 
+# Commits are authored by the bot, not by matias.
+export GIT_AUTHOR_NAME=${STARISK_BOT_NAME:-starisk-bot}
+export GIT_AUTHOR_EMAIL=${STARISK_BOT_EMAIL:-starisk-bot@users.noreply.github.com}
+export GIT_COMMITTER_NAME=$GIT_AUTHOR_NAME
+export GIT_COMMITTER_EMAIL=$GIT_AUTHOR_EMAIL
+
 cd "$REPO"
 
-log "pulling"
+log "syncing $BRANCH from origin/$BASE"
 git fetch --quiet origin
-git merge --ff-only --quiet origin/main || fail "local clone has diverged; fix it by hand"
+# This clone is bot-owned: every run starts from a clean origin/$BASE and
+# rebuilds the bot branch. Don't edit files here by hand.
+git checkout -B "$BRANCH" --quiet
+git reset --hard --quiet "origin/$BASE"
 
 # --- 1. turn the request queue into crawl work ---------------------------------
 if [ -n "${TURSO_DATABASE_URL:-}" ]; then
@@ -107,16 +118,35 @@ node web/scripts/sync-data.mjs 2>&1 | tail -5
 mkdir -p "$STATE_DIR"
 date -Is >"$STATE_DIR/last-run"
 
+# Refuse to publish deletions of tracked data. A parse bug that empties a file
+# should fail loudly, not land on the branch (and definitely not on main).
+deleted=$(git diff --name-only --diff-filter=D -- pipeline/data web/src/data || true)
+if [ -n "$deleted" ]; then
+  fail "refusing to publish deletions: $(echo "$deleted" | tr '\n' ' ')"
+fi
+
 if [ "$DRY" -eq 0 ] && [ -n "$(git status --porcelain)" ]; then
-  log "publishing"
+  log "publishing to $BRANCH"
   git add -A
   git commit -q -m "chore(data): nightly crawl $(date -u +%F)"
-  git push --quiet origin HEAD:main || fail "push failed"
+  # The bot owns this branch; each run rebuilds it from $BASE.
+  git push --quiet --force origin "HEAD:$BRANCH" || fail "push failed"
   summary=$(git show --stat --oneline HEAD | tail -1)
+  compare="https://github.com/MatiasAgelvis/starisk/compare/$BASE...$BRANCH?expand=1"
   log "pushed: $summary"
-  notify "starisk: updated" default "$summary"
+
+  if [ -n "${GH_TOKEN:-}" ] && command -v gh >/dev/null 2>&1; then
+    gh pr view "$BRANCH" --json number >/dev/null 2>&1 ||
+      gh pr create --base "$BASE" --head "$BRANCH" \
+        --title "chore(data): nightly crawl $(date -u +%F)" \
+        --body "Automated data refresh from the homelab. Review the diff; merge to publish." \
+        >/dev/null 2>&1 ||
+      log "WARN: could not create the pull request (check GH_TOKEN scope)"
+  fi
+
+  notify "starisk: nightly ready" default "$summary"$'\n'"$compare"
 elif [ "$DRY" -eq 1 ]; then
-  log "dry run: not committing"
+  log "dry run: not committing, not pushing"
 else
   log "no data changes"
   notify "starisk: no changes" low "nightly run completed; nothing to publish"
