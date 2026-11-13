@@ -125,6 +125,41 @@ if [ -n "$deleted" ]; then
   fail "refusing to publish deletions: $(echo "$deleted" | tr '\n' ' ')"
 fi
 
+# A file can also be emptied without being deleted (the groupings.json bug):
+# compare entry counts against $BASE and refuse a large drop.
+shrank=$(python3 - "$BASE" <<'PY'
+import json, subprocess, sys
+base = sys.argv[1]
+files = ["pipeline/data/scores.json", "pipeline/data/groupings.json",
+         "pipeline/data/requests.json", "pipeline/data/sources.json"]
+
+def count(value):
+    if isinstance(value, dict):
+        rows = value.get("rows")
+        if isinstance(rows, list):
+            return len(rows)
+        return len(value)
+    return len(value) if isinstance(value, list) else 0
+
+for path in files:
+    try:
+        old = json.loads(subprocess.check_output(
+            ["git", "show", f"origin/{base}:{path}"], text=True))
+    except Exception:
+        continue
+    try:
+        new = json.load(open(path))
+    except Exception:
+        continue
+    before, after = count(old), count(new)
+    if before >= 20 and after < before * 0.85:
+        print(f"{path}: {before} -> {after}")
+PY
+)
+if [ -n "$shrank" ]; then
+  fail "refusing to publish a data shrink: $(echo "$shrank" | tr '\n' ' ')"
+fi
+
 if [ "$DRY" -eq 0 ] && [ -n "$(git status --porcelain)" ]; then
   log "publishing to $BRANCH"
   git add -A
