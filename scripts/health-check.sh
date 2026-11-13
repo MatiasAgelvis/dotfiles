@@ -95,7 +95,7 @@ esac
 
 # --- starisk nightly ---------------------------------------------------------
 if systemctl is-enabled --quiet starisk-nightly.timer 2>/dev/null; then
-  marker=$HOME_STATE/starisk/last-run
+  marker=/home/matias/.local/state/starisk/last-run.json
   if [ ! -f "$marker" ]; then
     fail "starisk nightly has never completed"
   elif find "$marker" -mmin +$((36 * 60)) | grep -q .; then

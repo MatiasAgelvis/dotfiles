@@ -1,15 +1,16 @@
 [Unit]
-Description=Starisk nightly crawl (residential IP)
-Documentation=https://github.com/MatiasAgelvis/starisk/blob/main/TODO.md
-Wants=network-online.target
-After=network-online.target
+Description=Starisk nightly crawl (containerised, residential IP)
+Documentation=https://github.com/MatiasAgelvis/starisk/blob/develop/pipeline/starisk/nightly.py
+Wants=network-online.target docker.service
+After=network-online.target docker.service
+Requires=docker.service
 
 [Service]
 Type=oneshot
-User=matias
-WorkingDirectory=/home/matias/src/starisk
-Environment=HOME=/home/matias
-Environment=STARISK_MAX_AGE=7
+# Root is required for the Docker socket; the job itself is a one-shot container
+# with no ports and its own volume.
 ExecStart=/usr/local/bin/starisk-nightly
+# 0 = committed, 10 = nothing changed. Anything else is a real failure.
+SuccessExitStatus=0 10
 TimeoutStartSec=3h
 Nice=10
