@@ -1,0 +1,10 @@
+[Unit]
+Description=Run the Starisk crawl nightly
+
+[Timer]
+OnCalendar=*-*-* 04:00:00
+RandomizedDelaySec=600
+Persistent=true
+
+[Install]
+WantedBy=timers.target

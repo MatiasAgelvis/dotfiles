@@ -32,6 +32,7 @@ NTFY_TOPIC=${NTFY_TOPIC:-}
 DISK_LIMIT=${DISK_LIMIT:-85}
 BACKUP_MAX_AGE_H=${BACKUP_MAX_AGE_H:-36}
 CLICK_URL=${CLICK_URL:-https://matiasagelvis.com}
+HOME_STATE=${HOME_STATE:-/home/matias/.local/state}
 
 mkdir -p "$STATE_DIR" 2>/dev/null || STATE_DIR=/tmp
 STATE_FILE=$STATE_DIR/last_status
@@ -91,6 +92,18 @@ case "$code" in
   200) pass "traefik answers /ping" ;;
   *) fail "traefik /ping answered $code" ;;
 esac
+
+# --- starisk nightly ---------------------------------------------------------
+if systemctl is-enabled --quiet starisk-nightly.timer 2>/dev/null; then
+  marker=$HOME_STATE/starisk/last-run
+  if [ ! -f "$marker" ]; then
+    fail "starisk nightly has never completed"
+  elif find "$marker" -mmin +$((36 * 60)) | grep -q .; then
+    fail "starisk nightly older than 36h"
+  else
+    pass "starisk nightly ran recently"
+  fi
+fi
 
 # --- clock -------------------------------------------------------------------
 stratum=$(chronyc tracking 2>/dev/null | awk -F': *' '/^Stratum/{print $2}')

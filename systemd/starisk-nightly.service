@@ -1,0 +1,15 @@
+[Unit]
+Description=Starisk nightly crawl (residential IP)
+Documentation=https://github.com/MatiasAgelvis/starisk/blob/main/TODO.md
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+Type=oneshot
+User=matias
+WorkingDirectory=/home/matias/src/starisk
+Environment=HOME=/home/matias
+Environment=STARISK_MAX_AGE=7
+ExecStart=/usr/local/bin/starisk-nightly
+TimeoutStartSec=3h
+Nice=10
