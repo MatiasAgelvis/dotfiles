@@ -9,8 +9,8 @@ Requires=docker.service
 Type=oneshot
 # Root is required for the Docker socket; the job itself is a one-shot container
 # with no ports and its own volume.
-ExecStart=/usr/local/bin/starisk-nightly
-# 0 = committed, 10 = nothing changed. Anything else is a real failure.
+ExecStart=/usr/bin/docker compose -f /home/matias/dotfiles/server/starisk/docker-compose.yml run --rm nightly
+# The runner's contract: 0 = committed, 10 = nothing changed.
 SuccessExitStatus=0 10
 TimeoutStartSec=3h
 Nice=10
