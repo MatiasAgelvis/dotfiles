@@ -95,7 +95,7 @@ esac
 
 # --- starisk nightly ---------------------------------------------------------
 if systemctl is-enabled --quiet starisk-nightly.timer 2>/dev/null; then
-  marker=/home/matias/.local/state/starisk/last-run.json
+  marker=/home/matias/src/starisk/logs/last-run.json
   report() {
     [ -f "$marker" ] || return 0
     python3 - "$marker" <<'PY' 2>/dev/null || true
