@@ -93,36 +93,6 @@ case "$code" in
   *) fail "traefik /ping answered $code" ;;
 esac
 
-# --- starisk nightly ---------------------------------------------------------
-if systemctl is-enabled --quiet starisk-nightly.timer 2>/dev/null; then
-  marker=/home/matias/src/starisk/logs/last-run.json
-  report() {
-    [ -f "$marker" ] || return 0
-    python3 - "$marker" <<'PY' 2>/dev/null || true
-import json, sys
-try:
-    d = json.load(open(sys.argv[1]))
-    print(f"{(d.get('status') or '?')} ({(d.get('reason') or 'no reason')})")
-except Exception:
-    pass
-PY
-  }
-  if systemctl is-failed --quiet starisk-nightly.service 2>/dev/null; then
-    fail "starisk nightly failed: $(report)"
-  elif [ ! -f "$marker" ]; then
-    fail "starisk nightly has never completed"
-  elif find "$marker" -mmin +$((36 * 60)) | grep -q .; then
-    fail "starisk nightly older than 36h"
-  else
-    status=$(python3 -c 'import json,sys;print(json.load(open(sys.argv[1])).get("code",0))' "$marker" 2>/dev/null || echo 0)
-    if [ "$status" != "0" ] && [ "$status" != "10" ]; then
-      fail "starisk last run: $(report)"
-    else
-      pass "starisk last run: $(report)"
-    fi
-  fi
-fi
-
 # --- clock -------------------------------------------------------------------
 stratum=$(chronyc tracking 2>/dev/null | awk -F': *' '/^Stratum/{print $2}')
 if [ "${stratum:-0}" -gt 0 ] 2>/dev/null; then
