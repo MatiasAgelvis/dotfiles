@@ -1,6 +1,5 @@
 [Unit]
 Description=Blank the console framebuffer at boot
-Documentation=man:fbdev(4)
 # The kernel blank timer does not fire on this box (kernel 7.0.0-43 + i915drmfb),
 # so consoleblank= and setterm never trigger. Writing sysfs works immediately.
 After=systemd-vconsole-setup.service
